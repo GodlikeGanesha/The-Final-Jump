@@ -1,0 +1,149 @@
+ploadlib (c) 2006 GNU LGPL v2.1, see license.txt
+
+Official Documentation
+----
+Matthew Netsch (thrawn411@hotmail.com)
+
+To Compile Lib:
+fbc -lib ploadlib.bas
+
+Intention of Use:
+  ploadlib is intended for use with FreeBASIC
+  programs in order to load PNG Image files with
+  a one function step manner. The library is
+  quick, reliable, and has little overhead.
+
+Supports:
+  -Both Interlaced and NonInterlaced PNGs
+  -Bit depths [per sample]: 1, 2, 4, 8, 16
+  -Color Types: Grayscale, RGB, Paletted
+  -Alpha Channel* [Partial Transparency]
+  -tRNS Chunk* [One color/Paletted Transparency]
+  -gAMA
+
+  *Note: You must PUT with ALPHA to view these correctly.
+
+  In paletted screen modes, ploadlib only supports paletted
+  and grayscale images, and does not support transparency.
+  
+  ploadlib will change the screen's palette so that the
+  loaded image will display correctly.  You can disable this
+  in ploadlib.bas at compile time by defining UpdatePalette
+  as 0 instead of -1.
+
+Functions:
+
+  Contents
+     -Pload
+     -MPload
+     -Pload_GetError
+     Appendix A: Pload Error Codes
+  
+  ==---==-==---===
+  Pload
+  ------
+
+  Description:
+    Loads a PNG from a file
+
+  Syntax:
+          pload ( Filename )
+
+  Arguments:
+    Filename - A String specifying the PNG file to load
+
+  Returns:
+    An FB Image buffer pointer, 0 if error
+
+  Example:
+
+      Screen 19, 32
+      #include "ploadlib.bi"
+
+      Dim As Any Ptr Image
+
+      Image = Pload( "alphatest.png" )
+
+      Put (0,0), Image, ALPHA
+
+      ImageDestroy(Image)
+
+      Sleep
+      System
+
+  ==---==-==---===
+  MPload
+  ------
+
+  Description:
+    Loads a PNG from a buffer pointer
+
+  Syntax:
+          mpload ( Buffer, Length )
+
+  Arguments:
+    Buffer - A pointer to a valid PNG Buffer
+    Length - The Length of the Buffer
+
+  Returns:
+    An FB Image buffer pointer, 0 if error
+
+  Example:
+    See example.bas
+
+  ==---==-==---===
+  Pload_GetError
+  ------
+
+  Description:
+    Returns specific error code
+
+  Syntax:
+          Pload_GetError ( )
+
+  Arguments:
+
+  Returns:
+    A pload error code (PLOAD_ERR type), PLOAD_NOERROR is returned by default
+
+  Example:
+
+      Screen 19, 32
+      #include "ploadlib.bi"
+
+      Dim As Any Ptr Image
+      Dim As PLOAD_ERR ErrorCode
+
+      Image = Pload( "alphatest.png" )
+
+      ErrorCode = Pload_GetError()
+      
+      If ErrorCode = PLOAD_NOERROR Then
+         Put (0,0), Image, ALPHA
+      Else
+         Print ErrorCode
+      End If
+
+      ImageDestroy(Image)
+
+      Sleep
+      System
+
+  ==---==-==---===
+  Appendix A: Pload Error Codes
+  ------
+    Possible Returns from Pload_GetError:
+
+      PLOAD_NOERROR            'No Error
+      PLOAD_INVALIDSIG         '7 byte Signature Check Failed
+      PLOAD_FILECORRUPTED      'Cyclic Redundancy Check Failed
+      PLOAD_INVALIDCHUNKS      'Chunks could be in improper order, invalid sigs, critical chunks not recognized, missing required critical chunks
+      PLOAD_INVALIDHEADER      'IDHR chunk unsupported according to specification
+      PLOAD_INVALID_IDATSTREAM 'Most likely the IDAT stream [zstream] is corrupt and zlib spit back an error
+      PLOAD_RENDERINGFAILED    'Current Screendepth is not 24 or 32, ImageCreate Failed, or PLTE chunk is invalid
+      PLOAD_FILEOPENED_FAILED  'PLOAD() Failed when opening file
+      PLOAD_MISCERROR          'Error trapped by ON ERROR (Must have ON ERROR checking enabled, see source)
+
+
+Any questions or comments contact me at
+thraw411@hotmail.com in regards to the documentation
