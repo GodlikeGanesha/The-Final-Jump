@@ -10,46 +10,90 @@ dim shared as integer forneTerm,hintenTerm,hochTerm
 
 sub event(ByVal Parameter as Any Ptr)
     DIM evt AS FB.EVENT
+    dim as Integer x,y
     dim as String dump
-    DO
-      IF SCREENEVENT(@evt) THEN
-        SELECT CASE evt.type
-          CASE FB.EVENT_KEY_PRESS
-            IF evt.scancode = FB.SC_ESCAPE THEN esc()
-            IF evt.scancode = FB.SC_RIGHT THEN 
-                forneTerm = 0
-                ThreadCreate(@forne)
-                end if
-            IF evt.scancode = FB.SC_LEFT THEN
-                hintenTerm = 0
-                ThreadCreate(@hinten)
-                end if
-            IF evt.scancode = FB.SC_SPACE THEN
-                hochTerm = 0
-                ThreadCreate(@hoch)
-                end if
-          CASE FB.EVENT_KEY_RELEASE
-            IF evt.scancode = FB.SC_RIGHT THEN 
-                forneTerm = 1
-            end if
-            IF evt.scancode = FB.SC_LEFT THEN 
-                hintenTerm = 1
-            end if
-            IF evt.scancode = FB.SC_SPACE THEN 
-                hochTerm = 1
-            end if
-          CASE FB.EVENT_WINDOW_CLOSE
-            term = 1
-        END SELECT
-        dump = inkey
-      END IF
-      SLEEP 1
-    LOOP until term
+    do
+        if guiMode = 0 then
+            Do
+                IF SCREENEVENT(@evt) THEN
+                    SELECT CASE evt.type                    
+                        CASE FB.EVENT_MOUSE_BUTTON_PRESS
+                    
+                        CASE FB.EVENT_MOUSE_BUTTON_RELEASE
+                            if evt.button = FB.BUTTON_LEFT then
+                                getmouse(x,y,,)
+                                if x > 376 and x < 680 and y > 88 and y < 299 then guiMode = 1
+                            end if
+                        CASE FB.EVENT_WINDOW_CLOSE
+                            term = 1
+                    END SELECT
+              END IF
+              dump = inkey
+              sleep 1
+            loop until not guiMode = 0 or term
+        elseif guiMode = 1 then
+            DO
+              IF SCREENEVENT(@evt) THEN
+                SELECT CASE evt.type
+                  CASE FB.EVENT_KEY_PRESS
+                    IF evt.scancode = FB.SC_ESCAPE THEN guiMode = 2
+                    IF evt.scancode = FB.SC_RIGHT THEN 
+                        forneTerm = 0
+                        ThreadCreate(@forne)
+                        end if
+                    IF evt.scancode = FB.SC_LEFT THEN
+                        hintenTerm = 0
+                        ThreadCreate(@hinten)
+                        end if
+                    IF evt.scancode = FB.SC_SPACE THEN
+                        hochTerm = 0
+                        ThreadCreate(@hoch)
+                        end if
+                  CASE FB.EVENT_KEY_RELEASE
+                    IF evt.scancode = FB.SC_RIGHT THEN 
+                        forneTerm = 1
+                    end if
+                    IF evt.scancode = FB.SC_LEFT THEN 
+                        hintenTerm = 1
+                    end if
+                    IF evt.scancode = FB.SC_SPACE THEN 
+                        hochTerm = 1
+                    end if
+                  CASE FB.EVENT_WINDOW_CLOSE
+                    term = 1
+                END SELECT
+                dump = inkey
+              END IF
+              SLEEP 1
+            LOOP until not guiMode = 1 or term
+        elseif guiMode = 2 then
+            do
+                IF SCREENEVENT(@evt) THEN
+                    SELECT CASE evt.type
+                        CASE FB.EVENT_KEY_PRESS
+                            IF evt.scancode = FB.SC_ESCAPE THEN guiMode = 1
+                        CASE FB.EVENT_MOUSE_BUTTON_PRESS
+                    
+                        CASE FB.EVENT_MOUSE_BUTTON_RELEASE
+                            if evt.button = FB.BUTTON_LEFT then
+                                getmouse(x,y,,)
+                                if x > 304 and x < 726 and y > 102 and y < 288 then guiMode = 1
+                                if x > 303 and x < 722 and y > 350 and y < 549 then guiMode = 0
+                            end if
+                        CASE FB.EVENT_WINDOW_CLOSE
+                            term = 1
+                    END SELECT
+              END IF
+              dump = inkey
+              sleep 1
+            loop until not guiMode = 2 or term
+        elseif guiMode = 3 then
+            do
+                sleep 1
+            loop until not guiMode = 3 or term
+        end if
+    loop until term
 end sub 
-
-sub esc()
-    
-end sub
 
 sub forne(ByVal Parameter as Any Ptr)
     do until forneTerm
