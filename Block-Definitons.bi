@@ -1,6 +1,9 @@
-#ifndef __Global_BI__
-#define __Global_BI__
+#ifndef __BlockDef_BI__
+#define __BlockDef_BI__
 
-dim as String Blocks(0 to 100)
+dim shared as Integer texture(3,2) = {  {1080, 720}, _
+                                        {1080, 720}, _
+                                        {1080, 720}, _
+                                        {265,281} }
 
 #endif

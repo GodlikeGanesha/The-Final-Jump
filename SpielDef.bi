@@ -6,7 +6,7 @@
 #include "Global.bi"
 #include "Physik-Engine.bas"
 #include "Event-Engine.bas"
-#include "LvlLoader.bas"
+#include "Loader.bas"
 
 
 #endif
