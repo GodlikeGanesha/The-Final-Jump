@@ -22,12 +22,13 @@ sub event(ByVal Parameter as Any Ptr)
                         CASE FB.EVENT_MOUSE_BUTTON_RELEASE
                             if evt.button = FB.BUTTON_LEFT then
                                 getmouse(x,y,,)
-                                if x > 376 and x < 680 and y > 88 and y < 299 then guiMode = 1
+                                if x > 25 and x < 175 and y > 330 and y < 415 then guiMode = 1
+                                if x > 400 and x < 575 and y > 375 and y < 550 then term = 1
                             end if
                         CASE FB.EVENT_WINDOW_CLOSE
                             term = 1
                     END SELECT
-              END IF
+                END IF
               dump = inkey
               sleep 1
             loop until not guiMode = 0 or term
@@ -96,31 +97,31 @@ sub event(ByVal Parameter as Any Ptr)
 end sub 
 
 sub forne(ByVal Parameter as Any Ptr)
-    do until forneTerm
-    PosX += 10
-    sleep 1
+    do until forneTerm or not guiMode = 1 or term
+    lvl.Spieler.ort.X += 10
+    sleep 10
     loop
 end sub
 
 sub hinten(ByVal Parameter as Any Ptr)
-    do until hintenTerm
-    PosX -= 10
-    sleep 1
+    do until hintenTerm or not guiMode = 1 or term
+    lvl.Spieler.ort.X -= 10
+    sleep 10
     loop
 end sub
 
 sub hoch(ByVal Parameter as Any Ptr)
     dim as Integer i,h 
-    do until hochTerm
+    do until hochTerm or not guiMode = 1 or term
     h = 200
     
     for i=1 to h step 2
-        PosY -= 2
+        lvl.Spieler.ort.Y -= 2
         sleep 10
     next i
     
     for i=1 to h step 2
-        PosY += 2
+        lvl.Spieler.ort.Y += 2
         sleep 10
     next i
     sleep 2

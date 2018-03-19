@@ -8,5 +8,6 @@
 #include "Event-Engine.bas"
 #include "Loader.bas"
 
+dim i as Integer
 
 #endif

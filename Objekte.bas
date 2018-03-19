@@ -13,7 +13,7 @@ END TYPE
 TYPE sObj
   AS punkt ort
   AS hitbox hB
-  As Any Ptr texture
+  As uInteger texture
 END TYPE 
 
 TYPE mObj EXTENDS sObj
@@ -21,7 +21,12 @@ TYPE mObj EXTENDS sObj
   AS velocity mov
 END TYPE
 
+TYPE Player Extends mObj
+    
+END TYPE
+
 TYPE level
+  AS Player Spieler
   AS mObj mList(2100)
   AS Integer mObjs 
   AS sObj sList(2100)
