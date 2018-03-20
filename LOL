@@ -28,6 +28,7 @@ do
         loop while guiMode = 0 and term = 0
     elseif guiMode = 1 then
         cls
+        sleep 1
     end if
 loop until term = 1
 
