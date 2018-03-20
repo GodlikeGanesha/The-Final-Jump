@@ -3,14 +3,14 @@
 
 
 declare sub resourcesLoad()
-declare sub Butt()
+declare sub Butt(ByVal Parameter as Any Ptr)
 
 DIM shared evt AS FB.EVENT
 dim shared as Integer x, y, guiMode = 0, term = 0
 dim shared as Integer texture(5,2) = {{880,520}}
 Dim Shared AS ANY PTR resources(99)
 
-
+ThreadCreate(@Butt)
 
 FreeConsole()
 WINDOWTITLE "The Final Jump Launcher"
@@ -28,7 +28,7 @@ do
         screenlock
         Put (0,0), resources(0), trans
         screenunlock
-        Butt()
+        Butt
     elseif guiMode = 1 then
         
         
@@ -49,7 +49,7 @@ sub resourcesLoad()
     next
 end sub
 
-sub Butt()
+sub Butt(ByVal Parameter as Any Ptr)
     
 SELECT CASE evt.type               
     CASE FB.EVENT_MOUSE_BUTTON_PRESS
