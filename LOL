@@ -28,9 +28,8 @@ do
         screenlock
         Put (0,0), resources(0), trans
         screenunlock
-        Butt
     elseif guiMode = 1 then
-        
+        cls
         
     end if
     
@@ -50,20 +49,22 @@ sub resourcesLoad()
 end sub
 
 sub Butt(ByVal Parameter as Any Ptr)
-    
-SELECT CASE evt.type               
-    CASE FB.EVENT_MOUSE_BUTTON_PRESS
-                    
-    CASE FB.EVENT_MOUSE_BUTTON_RELEASE
-        if evt.button = FB.BUTTON_LEFT then
-            getmouse(x,y,,)
-            if x > 25 and x < 175 and y > 330 and y < 415 then guiMode = 1
-            if x > 210 and x < 330 and y > 330 and y < 450 then print "lol"
-            if x > 400 and x < 575 and y > 375 and y < 550 then term = 1
-        end if
-    CASE FB.EVENT_WINDOW_CLOSE
-        term = 1
-END SELECT
 
+DO
+    SELECT CASE evt.type               
+        CASE FB.EVENT_MOUSE_BUTTON_PRESS
+                        
+        CASE FB.EVENT_MOUSE_BUTTON_RELEASE
+            if evt.button = FB.BUTTON_LEFT then
+                getmouse(x,y,,)
+                if x > 430 and x < 675 and y > 430 and y < 475 then guiMode = 1
+                if x > 210 and x < 330 and y > 330 and y < 450 then print "lol"
+                if x > 400 and x < 575 and y > 375 and y < 550 then term = 1
+            end if
+        CASE FB.EVENT_WINDOW_CLOSE
+            term = 1
+    END SELECT
+    sleep 1
+loop until term = 1
     
 end sub
