@@ -1,0 +1,69 @@
+#include "Windows.bi"
+#include "fbgfx.bi"
+
+
+declare sub resourcesLoad()
+declare sub Butt()
+
+DIM shared evt AS FB.EVENT
+dim shared as Integer x, y, guiMode = 0, term = 0
+dim shared as Integer texture(5,2) = {{880,520}}
+Dim Shared AS ANY PTR resources(99)
+
+
+
+FreeConsole()
+WINDOWTITLE "The Final Jump Launcher"
+
+screenres 880, 520, 24,,&h40
+color rgba(255,0,0,100),rgba(255,0,0,100)
+WINDOW screen (0, 0) - (1080, 720)
+
+resourcesLoad()
+
+do
+    
+    if guiMode = 0 then
+        screensync
+        screenlock
+        Put (0,0), resources(0), trans
+        screenunlock
+        Butt()
+    elseif guiMode = 1 then
+        
+        
+    end if
+    
+loop until term = 1
+
+        
+
+sleep
+
+
+sub resourcesLoad()
+    dim i as Integer
+    for i=0 to 1
+        resources(i) = IMAGECREATE(texture(i,0),texture(i,1))
+        BLOAD "Resources\"+str(i)+".bmp",resources(i)
+    next
+end sub
+
+sub Butt()
+    
+SELECT CASE evt.type               
+    CASE FB.EVENT_MOUSE_BUTTON_PRESS
+                    
+    CASE FB.EVENT_MOUSE_BUTTON_RELEASE
+        if evt.button = FB.BUTTON_LEFT then
+            getmouse(x,y,,)
+            if x > 25 and x < 175 and y > 330 and y < 415 then guiMode = 1
+            if x > 210 and x < 330 and y > 330 and y < 450 then print "lol"
+            if x > 400 and x < 575 and y > 375 and y < 550 then term = 1
+        end if
+    CASE FB.EVENT_WINDOW_CLOSE
+        term = 1
+END SELECT
+
+    
+end sub
