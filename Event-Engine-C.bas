@@ -7,9 +7,19 @@ declare sub event(ByVal Parameter as Any Ptr)
 
 sub event(ByVal Parameter as Any Ptr)
     DIM evt AS FB.EVENT
-    dim as Integer x,y
+    dim as Integer x,y,b,mx,my,id=-1,it=0
+    dim as single smx,smy,dps
     dim as UByte uPressed,lPressed,rPressed
     dim as String dump
+    
+    do until id >= 0 or it = 16
+        getjoystick(it,b)
+        if b = 0 then id = it
+        it += 1
+    loop
+    Pr += str(id)
+    if it = 16 then term = 1
+    
     do
         if guiMode = 0 then
             Do
@@ -32,29 +42,44 @@ sub event(ByVal Parameter as Any Ptr)
               sleep 1
             loop until not guiMode = 0 or term
         elseif guiMode = 1 then
-            if multikey(FB.SC_RIGHT) then rPressed = 1
-            if multikey(FB.SC_LEFT) then lPressed = 1
-            if multikey(FB.SC_SPACE) then uPressed = 1
+            do while (b and (1 shl 0))
+                Getjoystick id,b
+                sleep 1
+            loop
             DO
               IF SCREENEVENT(@evt) THEN
-                SELECT CASE evt.type
-                  CASE FB.EVENT_KEY_PRESS
+                  if evt.type = FB.EVENT_KEY_PRESS then
                     IF evt.scancode = FB.SC_ESCAPE THEN 
                         phPause=1
                         guiMode = 2
                     end if
-                    IF evt.scancode = FB.SC_RIGHT THEN rPressed = 1
-                    IF evt.scancode = FB.SC_LEFT THEN lPressed = 1 
-                    IF evt.scancode = FB.SC_SPACE THEN uPressed = 1
-                  CASE FB.EVENT_KEY_RELEASE
-                    IF evt.scancode = FB.SC_RIGHT THEN rPressed = 0
-                    IF evt.scancode = FB.SC_LEFT THEN lPressed = 0
-                    IF evt.scancode = FB.SC_SPACE THEN uPressed = 0
-                  CASE FB.EVENT_WINDOW_CLOSE
-                    term = 1
-                END SELECT
+                  elseif evt.type = FB.EVENT_WINDOW_CLOSE then 
+                      term = 1
+                  end if
                 dump = inkey
               END IF
+              
+              Getjoystick id,b,dps,dps,dps,dps,dps,dps,smx
+              
+              if (b AND (1 SHL 0)) then
+                    phPause = 1
+                    guiMode = 2
+              elseif (b AND (1 SHL 1)) or (b AND (1 SHL 2)) then 
+                    uPressed = 1
+              else
+                    uPressed = 0
+              end if
+              mx = int(smx)
+              if mx > 0.5 then 
+                  lPressed = 0
+                  rPressed = 1
+              elseif mx < -0.5 and mx > -2 then
+                  rPressed = 0
+                  lPressed = 1
+              else
+                  rPressed = 0
+                  lPressed = 0
+              end if
               SLEEP 1
               if lvl.Spieler.onGround = 1 then
                   if not lvl.Spieler.hhH and uPressed then lvl.Spieler.mov.Y = -jumpDis*jM
@@ -79,8 +104,16 @@ sub event(ByVal Parameter as Any Ptr)
             lPressed = 0
             rPressed = 0
         elseif guiMode = 2 then
+            do while (b and (1 shl 0))
+                Getjoystick id,b
+                sleep 1
+            loop
             do
-                IF SCREENEVENT(@evt) THEN
+                Getjoystick id,b
+                if (b and (1 shl 0)) then
+                    phPause = 0
+                    guiMode = 1
+                elseIF SCREENEVENT(@evt) THEN
                     SELECT CASE evt.type
                         CASE FB.EVENT_KEY_PRESS
                             IF evt.scancode = FB.SC_ESCAPE THEN 

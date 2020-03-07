@@ -6,7 +6,8 @@
 #include "Global.bi"
 #include "Physik-Engine.bas"
 #include "Event-Engine.bas"
-#include "Loader.bas"
 
+dim as Integer i,x,y,k
+dim as Ubyte counter = 0
 
 #endif
